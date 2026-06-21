@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutlu Yıl Dönümleri Sevgilim!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff5f5;
+            color: #4a4a4a;
+            text-align: center;
+            overflow-x: hidden;
+        }
+        header {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000') no-repeat center center/cover;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+        }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .subtitle { font-size: 1.2rem; font-weight: 300; letter-spacing: 2px; }
+        
+        /* Müzik Kutusu */
+        .music-box { background: white; padding: 15px; margin: -30px auto 30px; width: 85%; max-width: 400px; border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; gap: 15px; z-index: 10; position: relative; }
+        .music-btn { background: #ff4d6d; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .music-btn:hover { background: #e63956; }
+
+        .container { width: 90%; max-width: 800px; margin: 0 auto; padding: 20px 0; }
+        
+        /* Sayaç */
+        .countdown-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
+        .countdown-title { font-size: 1.1rem; color: #ff4d6d; font-weight: 600; margin-bottom: 15px; }
+        .countdown { display: flex; justify-content: center; gap: 15px; }
+        .time-box { background: #fff5f5; padding: 15px; border-radius: 10px; min-width: 70px; }
+        .time-box span { display: block; font-size: 1.8rem; font-weight: 600; color: #ff4d6d; }
+        .time-box label { font-size: 0.8rem; color: #888; }
+
+        /* Mektup Bölümü */
+        .letter { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); line-height: 1.8; text-align: left; margin-bottom: 40px; position: relative; }
+        .letter::before { content: "♥"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #ff4d6d; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* Gömülü Drive Galeri Alanı */
+        .drive-gallery-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
+        .section-title { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff4d6d; margin-bottom: 20px; }
+
+        footer { padding: 30px 0; color: #aaa; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Yıllarımız Kutlu Olsun Aşkım, İyi ki Varsın ❤️</h1>
+        <div class="subtitle">Birlikte Geçen Her An Çok Özel</div>
+    </header>
+
+    <div class="music-box">
+        <p style="font-size: 0.9rem; font-weight: 500;">Bizim Şarkımız 🎵</p>
+        <button class="music-btn" id="playBtn" onclick="toggleMusic()">Müziği Aç</button>
+        <audio id="bgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> 
+    </div>
+
+    <div class="container">
+
+        <!-- Kronolojik Sayaç -->
+        <div class="countdown-container">
+            <div class="countdown-title">Tam olarak ne kadardır beraberiz?</div>
+            <div class="countdown">
+                <div class="time-box"><span id="days">00</span><label>Gün</label></div>
+                <div class="time-box"><span id="hours">00</span><label>Saat</label></div>
+                <div class="time-box"><span id="minutes">00</span><label>Dakika</label></div>
+                <div class="time-box"><span id="seconds">00</span><label>Saniye</label></div>
+            </div>
+        </div>
+
+        <!-- Mektup -->
+        <div class="letter">
+            <h3 style="text-align: center; margin-bottom: 15px; color: #ff4d6d; font-family: 'Dancing Script', cursive; font-size: 2.2rem;">Benim Güzel Sevgilime...</h3>
+            <p>Seninle geçen yıllarım bana saniye gibi geliyor her anım seninle güzel her zerrem seninle bütün iyi ki varsın iyi ki benimlesin sevgilim SENİ ÇOK AMA ÇOK SEVİYORUM</p>
+            <br>
+            <p>Biraz yorulduk, biraz ara verdik ama finali yine şampiyon gibi yaptık! Biz seninle birbirimizden kopamıyoruz, çünkü bizim hikayemiz henüz bitmedi. Yeniden 'biz' olduğumuz şu son bir yıl, bana hayatın en güzel hediyesi oldu. Tüm iniş çıkışlarıyla, her şeyiyle iyi ki varsın sevgilim. 1. yılımız kutlu olsun, bu sefer sonsuza kadar!</p>
+        </div>
+
+        <!-- DOĞRUDAN SİTE İÇİNDE AÇILAN BUTONSUZ GALERİ ALANI -->
+        <h2 class="section-title">Anılarımız</h2>
+        <div class="drive-gallery-container">
+            <!-- AŞAĞIDAKİ src="..." KISMINA GOOGLE DRIVE KLASÖRÜNÜN ID'SİNİ YAZMALISIN -->
+            <iframe src="https://drive.google.com/drive/folders/1AX2jYK6YxgHkdfOuTIQ5m2lB0IkWOQBw" width="100%" height="550" allow="autoplay" style="border: none; border-radius: 10px;"></iframe>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Seni Seviyorum ♥ 2026</p>
+    </footer>
+
+    <script>
+        // Müzik Aç/Kapat Fonksiyonu
+        const music = document.getElementById('bgMusic');
+        const btn = document.getElementById('playBtn');
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                btn.innerText = "Müziği Durdur";
+                btn.style.background = "#333";
+            } else {
+                music.pause();
+                btn.innerText = "Müziği Aç";
+                btn.style.background = "#ff4d6d";
+            }
+        }
+
+        // İlişki başlangıç tarihi (Kodundaki Temmuz 16, 2025 ayarı korundu)
+        const startDate = new Date(2025, 6, 16, 0, 0, 0);
+
+        function updateCountUp() {
+            const now = new Date();
+            const difference = now - startDate;
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+
+        setInterval(updateCountUp, 1000);
+        updateCountUp();
+    </script>
+</body>
+</html>
