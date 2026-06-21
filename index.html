@@ -15,7 +15,8 @@
             overflow-x: hidden;
         }
         header {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000') no-repeat center center/cover;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('1.jpg') no-repeat center center/cover;
+            /* Üstteki url('1.jpg') sayesinde kapak fotoğrafın otomatik olarak yüklediğin 1. fotoğraf olacak kral */
             height: 60vh;
             display: flex;
             flex-direction: column;
@@ -46,9 +47,11 @@
         .letter { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); line-height: 1.8; text-align: left; margin-bottom: 40px; position: relative; }
         .letter::before { content: "♥"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #ff4d6d; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* Gömülü Drive Galeri Alanı */
-        .drive-gallery-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
+        /* Otomatik Galeri Alanı */
         .section-title { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff4d6d; margin-bottom: 20px; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .gallery img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: transform 0.3s; }
+        .gallery img:hover { transform: scale(1.03); }
 
         footer { padding: 30px 0; color: #aaa; font-size: 0.9rem; }
     </style>
@@ -68,7 +71,6 @@
 
     <div class="container">
 
-        <!-- Kronolojik Sayaç -->
         <div class="countdown-container">
             <div class="countdown-title">Tam olarak ne kadardır beraberiz?</div>
             <div class="countdown">
@@ -79,7 +81,6 @@
             </div>
         </div>
 
-        <!-- Mektup -->
         <div class="letter">
             <h3 style="text-align: center; margin-bottom: 15px; color: #ff4d6d; font-family: 'Dancing Script', cursive; font-size: 2.2rem;">Benim Güzel Sevgilime...</h3>
             <p>Seninle geçen yıllarım bana saniye gibi geliyor her anım seninle güzel her zerrem seninle bütün iyi ki varsın iyi ki benimlesin sevgilim SENİ ÇOK AMA ÇOK SEVİYORUM</p>
@@ -87,12 +88,9 @@
             <p>Biraz yorulduk, biraz ara verdik ama finali yine şampiyon gibi yaptık! Biz seninle birbirimizden kopamıyoruz, çünkü bizim hikayemiz henüz bitmedi. Yeniden 'biz' olduğumuz şu son bir yıl, bana hayatın en güzel hediyesi oldu. Tüm iniş çıkışlarıyla, her şeyiyle iyi ki varsın sevgilim. 1. yılımız kutlu olsun, bu sefer sonsuza kadar!</p>
         </div>
 
-        <!-- DOĞRUDAN SİTE İÇİNDE AÇILAN BUTONSUZ GALERİ ALANI -->
         <h2 class="section-title">Anılarımız</h2>
-        <div class="drive-gallery-container">
-            <!-- AŞAĞIDAKİ src="..." KISMINA GOOGLE DRIVE KLASÖRÜNÜN ID'SİNİ YAZMALISIN -->
-           <iframe src="https://drive.google.com/drive/u/0/folders/1AX2jYK6YxgHkdfOuTIQ5m2lB0IkWOQBw" width="100%" height="550" style="border: none; border-radius: 10px;"></iframe>
-        </div>
+        <div class="gallery" id="photoGallery">
+            </div>
 
     </div>
 
@@ -101,6 +99,19 @@
     </footer>
 
     <script>
+        // TOPLAM KAÇ TANE FOTOĞRAF YÜKLEDİYSEN BURAYA O SAYIYI YAZ KRAL (Örn: 50 ise 50 yaz)
+        const toplamFotografSayisi = 89; 
+
+        // Galeriyi otomatik dolduran JS motoru
+        const galleryContainer = document.getElementById('photoGallery');
+        for (let i = 1; i <= toplamFotografSayisi; i++) {
+            const img = document.createElement('img');
+            img.src = `${i}.jpg`;
+            img.alt = `Anı ${i}`;
+            img.loading = "lazy"; // Sayfa hızlı açılsın diye aşağı kaydırdıkça yükler
+            galleryContainer.appendChild(img);
+        }
+
         // Müzik Aç/Kapat Fonksiyonu
         const music = document.getElementById('bgMusic');
         const btn = document.getElementById('playBtn');
@@ -116,7 +127,7 @@
             }
         }
 
-        // İlişki başlangıç tarihi (Kodundaki Temmuz 16, 2025 ayarı korundu)
+        // İlişki başlangıç tarihi (Temmuz 16, 2025)
         const startDate = new Date(2025, 6, 16, 0, 0, 0);
 
         function updateCountUp() {
