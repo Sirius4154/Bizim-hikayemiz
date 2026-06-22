@@ -16,7 +16,6 @@
         }
         header {
             background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('Pp.jpg') no-repeat center center/cover;
-            /* Üstteki url('1.jpg') sayesinde kapak fotoğrafın otomatik olarak yüklediğin 1. fotoğraf olacak kral */
             height: 60vh;
             display: flex;
             flex-direction: column;
@@ -33,7 +32,7 @@
         .music-btn { background: #ff4d6d; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
         .music-btn:hover { background: #e63956; }
 
-        .container { width: 90%; max-width: 800px; margin: 0 auto; padding: 20px 0; }
+        .container { width: 92%; max-width: 900px; margin: 0 auto; padding: 20px 0; }
         
         /* Sayaç */
         .countdown-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
@@ -47,13 +46,38 @@
         .letter { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); line-height: 1.8; text-align: left; margin-bottom: 40px; position: relative; }
         .letter::before { content: "♥"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #ff4d6d; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* Otomatik Galeri Alanı */
-        .section-title { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff4d6d; margin-bottom: 20px; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 40px; }
-        .gallery img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: transform 0.3s; }
-        .gallery img:hover { transform: scale(1.03); }
+        .section-title { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: #ff4d6d; margin: 40px 0 20px; }
 
-        footer { padding: 30px 0; color: #aaa; font-size: 0.9rem; }
+        /* --- PINTEREST (MASONRY) GALERİ STİLİ --- */
+        .masonry-gallery {
+            columns: 3 200px; /* Ekran boyutuna göre otomatik kolon sayısı (Mobilde 1-2, Masaüstünde 3-4 kolon) */
+            column-gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .masonry-item {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease;
+        }
+        .masonry-item:hover {
+            transform: scale(1.02);
+        }
+        .masonry-item img, .masonry-item video {
+            width: 100%;
+            display: block;
+            height: auto; /* Fotoğrafın kendi orijinal dikey/yatay oranını korur kral */
+            object-fit: cover;
+        }
+        /* Videoların üzerine küçük bir oynatma simgesi ipucu */
+        .video-item { position: relative; }
+
+        footer { padding: 40px 0; color: #aaa; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -89,7 +113,7 @@
         </div>
 
         <h2 class="section-title">Anılarımız</h2>
-        <div class="gallery" id="photoGallery">
+        <div class="masonry-gallery" id="pinterestGallery">
             </div>
 
     </div>
@@ -99,20 +123,55 @@
     </footer>
 
     <script>
-        // TOPLAM KAÇ TANE FOTOĞRAF YÜKLEDİYSEN BURAYA O SAYIYI YAZ KRAL (Örn: 50 ise 50 yaz)
+        /* ================= AYARLAR KISMI ================= */
+        
+        // 1. TOPLAM FOTOĞRAF SAYISI (Örn: 1.jpg, 2.jpg... diye giden fotoğrafların adedi)
         const toplamFotografSayisi = 89; 
+        
+        // Fotoğraf uzantın büyük harf mi küçük harf mi? (Büyükse 'JPG', küçükse 'jpg' yaz kral)
+        const fotografUzantisi = 'jpg'; 
 
-        // Galeriyi otomatik dolduran JS motoru
-        const galleryContainer = document.getElementById('photoGallery');
+        // 2. VİDEOLARININ LİSTESİ
+        // Videolarını GitHub'a yüklerken isimlerini video1.mp4, video2.mp4 yapabilirsin.
+        // Kaç tane videon varsa aşağıya aynen bu formatta ekle kral:
+        const videolar = [
+            "video1.mp4",
+            "video2.mp4"
+        ];
+
+        /* ================= GALERİ MOTORU ================= */
+        const galleryContainer = document.getElementById('pinterestGallery');
+
+        // Önce Videoları En Üste Şık Bir Şekilde Koyalım (İstersen yerini değiştirebilirsin)
+        videolar.forEach(videoSrc => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'masonry-item video-item';
+            
+            const videoHtml = `
+                <video controls playsinline preload="metadata">
+                    <source src="${videoSrc}" type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
+                </video>
+            `;
+            itemDiv.innerHTML = videoHtml;
+            galleryContainer.appendChild(itemDiv);
+        });
+
+        // Sonra Fotoğrafları Pinterest Düzeninde Dizelim
         for (let i = 1; i <= toplamFotografSayisi; i++) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'masonry-item';
+            
             const img = document.createElement('img');
-            img.src = `${i}.jpg`;
+            img.src = `${i}.${fotografUzantisi}`;
             img.alt = `Anı ${i}`;
-            img.loading = "lazy"; // Sayfa hızlı açılsın diye aşağı kaydırdıkça yükler
-            galleryContainer.appendChild(img);
+            img.loading = "lazy";
+            
+            itemDiv.appendChild(img);
+            galleryContainer.appendChild(itemDiv);
         }
 
-        // Müzik Aç/Kapat Fonksiyonu
+        /* ================= MÜZİK VE SAYAÇ MOTORU ================= */
         const music = document.getElementById('bgMusic');
         const btn = document.getElementById('playBtn');
         function toggleMusic() {
@@ -127,13 +186,10 @@
             }
         }
 
-        // İlişki başlangıç tarihi (Temmuz 16, 2025)
         const startDate = new Date(2025, 6, 16, 0, 0, 0);
-
         function updateCountUp() {
             const now = new Date();
             const difference = now - startDate;
-
             const days = Math.floor(difference / (1000 * 60 * 60 * 24));
             const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
@@ -144,7 +200,6 @@
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-
         setInterval(updateCountUp, 1000);
         updateCountUp();
     </script>
