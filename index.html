@@ -48,9 +48,9 @@
 
         .section-title { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: #ff4d6d; margin: 40px 0 20px; }
 
-        /* 🔥 GERÇEK ASİMETRİK PINTEREST MASONRY DÜZENİ 🔥 */
+        /* 🔥 ASİMETRİK MASONRY DÜZENİ 🔥 */
         .masonry-holder {
-            columns: 3 260px; /* Büyük ekranda 3 kolon, mobilde otomatik tek/çift kolona düşer */
+            columns: 3 260px;
             column-gap: 15px;
             width: 100%;
             margin-bottom: 40px;
@@ -73,14 +73,41 @@
             box-shadow: 0 8px 20px rgba(255, 77, 109, 0.15);
         }
         
-        /* Fotoğraf ve videoların kendi orijinal boyutunu korumasını sağlayan sihirli ayar */
         .masonry-cell img, .masonry-cell video {
             width: 100%;
-            height: auto; /* Yüksekliği serbest bırakıyoruz, kendi oranında akıyor */
+            height: auto;
             display: block;
         }
 
         footer { padding: 40px 0; color: #aaa; font-size: 0.9rem; }
+
+        /* ================= MOBİL UYUMLULUK AYARLARI ================= */
+        @media (max-width: 768px) {
+            header {
+                height: 45vh;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .masonry-holder {
+                columns: 2; /* Mobilde jilet gibi yan yana 2 sıra */
+                column-gap: 10px;
+            }
+            .masonry-cell {
+                margin-bottom: 10px;
+                border-radius: 8px;
+            }
+            .countdown {
+                gap: 8px;
+            }
+            .time-box {
+                padding: 10px 5px;
+                min-width: 60px;
+            }
+            .time-box span {
+                font-size: 1.4rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -140,7 +167,6 @@
         /* ================= MASONRY GALERİ MOTORU ================= */
         const galleryContainer = document.getElementById('masonryGallery');
 
-        // Videoları ekle (Kendi dikey/yatay oranında görünecek)
         videolar.forEach((videoSrc) => {
             const cell = document.createElement('div');
             cell.className = 'masonry-cell';
@@ -152,7 +178,6 @@
             galleryContainer.appendChild(cell);
         });
 
-        // Fotoğrafları ekle (Kırpma yok, orijinal boyutta yan yana şık dizilim)
         for (let i = 1; i <= toplamFotografSayisi; i++) {
             const cell = document.createElement('div');
             cell.className = 'masonry-cell';
