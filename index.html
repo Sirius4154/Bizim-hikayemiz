@@ -32,7 +32,7 @@
         .music-btn { background: #ff4d6d; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
         .music-btn:hover { background: #e63956; }
 
-        .container { width: 92%; max-width: 900px; margin: 0 auto; padding: 20px 0; }
+        .container { width: 92%; max-width: 1000px; margin: 0 auto; padding: 20px 0; }
         
         /* Sayaç */
         .countdown-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
@@ -48,34 +48,45 @@
 
         .section-title { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: #ff4d6d; margin: 40px 0 20px; }
 
-        /* --- PINTEREST (MASONRY) GALERİ STİLİ --- */
-        .masonry-gallery {
-            columns: 3 200px; /* Ekran boyutuna göre otomatik kolon sayısı (Mobilde 1-2, Masaüstünde 3-4 kolon) */
-            column-gap: 15px;
+        /* 🔥 ŞEKİLLİ ŞÜKÜLLÜ ASİMETRİK KOLAJ (BENTO) GRID STİLİ 🔥 */
+        .fancy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-auto-rows: 220px; /* Kare temel yapı */
+            grid-gap: 15px;
+            grid-auto-flow: dense; /* Boşlukları otomatik doldurma zekası */
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
-        .masonry-item {
-            display: inline-block;
-            width: 100%;
-            margin-bottom: 15px;
+        .grid-item {
+            position: relative;
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .masonry-item:hover {
-            transform: scale(1.02);
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 77, 109, 0.2);
+            z-index: 2;
         }
-        .masonry-item img, .masonry-item video {
+        .grid-item img, .grid-item video {
             width: 100%;
+            height: 100%;
+            object-fit: cover; /* Karelerin içini tam doldurması için */
             display: block;
-            height: auto; /* Fotoğrafın kendi orijinal dikey/yatay oranını korur kral */
-            object-fit: cover;
         }
-        /* Videoların üzerine küçük bir oynatma simgesi ipucu */
-        .video-item { position: relative; }
+
+        /* Asimetrik Şekil Dağılımları (Büyük ekranlarda devreye girer) */
+        @media (min-width: 600px) {
+            /* Bazı elemanları yatayda 2 kat geniş yap */
+            .grid-item.wide { grid-column: span 2; }
+            /* Bazı elemanları dikeyde 2 kat yüksek yap */
+            .grid-item.tall { grid-row: span 2; }
+            /* Bazı çok özel anları devasa büyük kare yap */
+            .grid-item.big { grid-column: span 2; grid-row: span 2; }
+        }
 
         footer { padding: 40px 0; color: #aaa; font-size: 0.9rem; }
     </style>
@@ -96,7 +107,7 @@
     <div class="container">
 
         <div class="countdown-container">
-            <div class="countdown-title">Tam olarak ne kadardır beraberiz?</div>
+            <div class="countdown-title">Tam olarak ne kadar süredir Hayatımı renklendiriyorsun</div>
             <div class="countdown">
                 <div class="time-box"><span id="days">00</span><label>Gün</label></div>
                 <div class="time-box"><span id="hours">00</span><label>Saat</label></div>
@@ -113,7 +124,7 @@
         </div>
 
         <h2 class="section-title">Anılarımız</h2>
-        <div class="masonry-gallery" id="pinterestGallery">
+        <div class="fancy-grid" id="fancyGridGallery">
             </div>
 
     </div>
@@ -124,16 +135,10 @@
 
     <script>
         /* ================= AYARLAR KISMI ================= */
-        
-        // 1. TOPLAM FOTOĞRAF SAYISI (Örn: 1.jpg, 2.jpg... diye giden fotoğrafların adedi)
-        const toplamFotografSayisi = 89; 
-        
-        // Fotoğraf uzantın büyük harf mi küçük harf mi? (Büyükse 'JPG', küçükse 'jpg' yaz kral)
-        const fotografUzantisi = 'jpg'; 
+        const toplamFotografSayisi = 89; // Toplam kaç fotoğrafın var
+        const fotografUzantisi = 'jpg';  // Fotoğraf uzantın (küçükse jpg, büyükse JPG yap)
 
-        // 2. VİDEOLARININ LİSTESİ
-        // Videolarını GitHub'a yüklerken isimlerini video1.mp4, video2.mp4 yapabilirsin.
-        // Kaç tane videon varsa aşağıya aynen bu formatta ekle kral:
+        // Videolarının listesi (GitHub'a attığın video isimleri)
         const videolar = [
             "1.MP4",
             "2.MP4",
@@ -142,28 +147,38 @@
             "5.MP4"
         ];
 
-        /* ================= GALERİ MOTORU ================= */
-        const galleryContainer = document.getElementById('pinterestGallery');
+        /* ================= ŞEKİLLİ GALERİ MOTORU ================= */
+        const galleryContainer = document.getElementById('fancyGridGallery');
+        let itemIndex = 1;
 
-        // Önce Videoları En Üste Şık Bir Şekilde Koyalım (İstersen yerini değiştirebilirsin)
-        videolar.forEach(videoSrc => {
+        // 1. ÖNCE VİDEOLARI KOYALIM (Videolar büyük dursun diye 'big' veya 'wide' sınıfı verdik kral)
+        videolar.forEach((videoSrc, index) => {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'masonry-item video-item';
+            // İlk videoyu kocaman, ikinci videoyu yatay geniş yapalım:
+            itemDiv.className = index === 0 ? 'grid-item big' : 'grid-item wide';
             
-            const videoHtml = `
+            itemDiv.innerHTML = `
                 <video controls playsinline preload="metadata">
                     <source src="${videoSrc}" type="video/mp4">
-                    Tarayıcınız video etiketini desteklemiyor.
                 </video>
             `;
-            itemDiv.innerHTML = videoHtml;
             galleryContainer.appendChild(itemDiv);
         });
 
-        // Sonra Fotoğrafları Pinterest Düzeninde Dizelim
+        // 2. FOTOĞRAFLARI ASİMETRİK RİTİMLE DİZELİM
         for (let i = 1; i <= toplamFotografSayisi; i++) {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'masonry-item';
+            
+            // İşte burası işin "şekilli şüküllü" sırrı: Matematiksel olarak bazı fotoğraflara özel boyut veriyoruz
+            if (i % 7 === 0) {
+                itemDiv.className = 'grid-item big';  // Her 7. fotoğraf dev kare olsun
+            } else if (i % 4 === 0) {
+                itemDiv.className = 'grid-item tall'; // Her 4. fotoğraf dikey uzun olsun
+            } else if (i % 3 === 0) {
+                itemDiv.className = 'grid-item wide'; // Her 3. fotoğraf yatay geniş olsun
+            } else {
+                itemDiv.className = 'grid-item';      // Diğerleri standart şık kare
+            }
             
             const img = document.createElement('img');
             img.src = `${i}.${fotografUzantisi}`;
