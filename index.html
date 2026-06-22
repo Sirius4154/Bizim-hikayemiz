@@ -32,7 +32,7 @@
         .music-btn { background: #ff4d6d; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
         .music-btn:hover { background: #e63956; }
 
-        .container { width: 92%; max-width: 1000px; margin: 0 auto; padding: 20px 0; }
+        .container { width: 95%; max-width: 1100px; margin: 0 auto; padding: 20px 0; }
         
         /* Sayaç */
         .countdown-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
@@ -48,44 +48,36 @@
 
         .section-title { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: #ff4d6d; margin: 40px 0 20px; }
 
-        /* 🔥 ŞEKİLLİ ŞÜKÜLLÜ ASİMETRİK KOLAJ (BENTO) GRID STİLİ 🔥 */
-        .fancy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            grid-auto-rows: 220px; /* Kare temel yapı */
-            grid-gap: 15px;
-            grid-auto-flow: dense; /* Boşlukları otomatik doldurma zekası */
+        /* 🔥 GERÇEK ASİMETRİK PINTEREST MASONRY DÜZENİ 🔥 */
+        .masonry-holder {
+            columns: 3 260px; /* Büyük ekranda 3 kolon, mobilde otomatik tek/çift kolona düşer */
+            column-gap: 15px;
             width: 100%;
             margin-bottom: 40px;
         }
-        .grid-item {
-            position: relative;
+        
+        .masonry-cell {
+            break-inside: avoid;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 15px;
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .grid-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(255, 77, 109, 0.2);
-            z-index: 2;
+        
+        .masonry-cell:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.15);
         }
-        .grid-item img, .grid-item video {
+        
+        /* Fotoğraf ve videoların kendi orijinal boyutunu korumasını sağlayan sihirli ayar */
+        .masonry-cell img, .masonry-cell video {
             width: 100%;
-            height: 100%;
-            object-fit: cover; /* Karelerin içini tam doldurması için */
+            height: auto; /* Yüksekliği serbest bırakıyoruz, kendi oranında akıyor */
             display: block;
-        }
-
-        /* Asimetrik Şekil Dağılımları (Büyük ekranlarda devreye girer) */
-        @media (min-width: 600px) {
-            /* Bazı elemanları yatayda 2 kat geniş yap */
-            .grid-item.wide { grid-column: span 2; }
-            /* Bazı elemanları dikeyde 2 kat yüksek yap */
-            .grid-item.tall { grid-row: span 2; }
-            /* Bazı çok özel anları devasa büyük kare yap */
-            .grid-item.big { grid-column: span 2; grid-row: span 2; }
         }
 
         footer { padding: 40px 0; color: #aaa; font-size: 0.9rem; }
@@ -124,8 +116,7 @@
         </div>
 
         <h2 class="section-title">Anılarımız</h2>
-        <div class="fancy-grid" id="fancyGridGallery">
-            </div>
+        <div class="masonry-holder" id="masonryGallery"></div>
 
     </div>
 
@@ -135,10 +126,9 @@
 
     <script>
         /* ================= AYARLAR KISMI ================= */
-        const toplamFotografSayisi = 89; // Toplam kaç fotoğrafın var
-        const fotografUzantisi = 'jpg';  // Fotoğraf uzantın (küçükse jpg, büyükse JPG yap)
+        const toplamFotografSayisi = 89; 
+        const fotografUzantisi = 'jpg';  
 
-        // Videolarının listesi (GitHub'a attığın video isimleri)
         const videolar = [
             "1.MP4",
             "2.MP4",
@@ -147,46 +137,33 @@
             "5.MP4"
         ];
 
-        /* ================= ŞEKİLLİ GALERİ MOTORU ================= */
-        const galleryContainer = document.getElementById('fancyGridGallery');
-        let itemIndex = 1;
+        /* ================= MASONRY GALERİ MOTORU ================= */
+        const galleryContainer = document.getElementById('masonryGallery');
 
-        // 1. ÖNCE VİDEOLARI KOYALIM (Videolar büyük dursun diye 'big' veya 'wide' sınıfı verdik kral)
-        videolar.forEach((videoSrc, index) => {
-            const itemDiv = document.createElement('div');
-            // İlk videoyu kocaman, ikinci videoyu yatay geniş yapalım:
-            itemDiv.className = index === 0 ? 'grid-item big' : 'grid-item wide';
-            
-            itemDiv.innerHTML = `
+        // Videoları ekle (Kendi dikey/yatay oranında görünecek)
+        videolar.forEach((videoSrc) => {
+            const cell = document.createElement('div');
+            cell.className = 'masonry-cell';
+            cell.innerHTML = `
                 <video controls playsinline preload="metadata">
                     <source src="${videoSrc}" type="video/mp4">
                 </video>
             `;
-            galleryContainer.appendChild(itemDiv);
+            galleryContainer.appendChild(cell);
         });
 
-        // 2. FOTOĞRAFLARI ASİMETRİK RİTİMLE DİZELİM
+        // Fotoğrafları ekle (Kırpma yok, orijinal boyutta yan yana şık dizilim)
         for (let i = 1; i <= toplamFotografSayisi; i++) {
-            const itemDiv = document.createElement('div');
-            
-            // İşte burası işin "şekilli şüküllü" sırrı: Matematiksel olarak bazı fotoğraflara özel boyut veriyoruz
-            if (i % 7 === 0) {
-                itemDiv.className = 'grid-item big';  // Her 7. fotoğraf dev kare olsun
-            } else if (i % 4 === 0) {
-                itemDiv.className = 'grid-item tall'; // Her 4. fotoğraf dikey uzun olsun
-            } else if (i % 3 === 0) {
-                itemDiv.className = 'grid-item wide'; // Her 3. fotoğraf yatay geniş olsun
-            } else {
-                itemDiv.className = 'grid-item';      // Diğerleri standart şık kare
-            }
+            const cell = document.createElement('div');
+            cell.className = 'masonry-cell';
             
             const img = document.createElement('img');
             img.src = `${i}.${fotografUzantisi}`;
             img.alt = `Anı ${i}`;
             img.loading = "lazy";
             
-            itemDiv.appendChild(img);
-            galleryContainer.appendChild(itemDiv);
+            cell.appendChild(img);
+            galleryContainer.appendChild(cell);
         }
 
         /* ================= MÜZİK VE SAYAÇ MOTORU ================= */
